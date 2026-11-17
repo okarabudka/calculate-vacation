@@ -4,7 +4,7 @@ A PHP console application that calculates the number of vacation days per employ
 
 ## Context
 
-Built in April and May 2025 as a coding challenge (test assignment) for a PHP developer position. The task description is included in the repository as a PDF. After the first working version the code was refactored: a Symfony Console command, separate service and repository layers, PHP 8.3, `final` classes and strict types.
+Built in April and May 2025 as a coding challenge (test assignment) for a PHP developer position. The task is restated in [TASK.md](TASK.md). After the first working version the code was refactored: a Symfony Console command, separate service and repository layers, PHP 8.3, `final` classes and strict types.
 
 ## Features
 
