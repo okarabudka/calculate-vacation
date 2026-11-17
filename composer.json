@@ -2,6 +2,7 @@
     "name": "okarabudka/php-calculate-vacation",
     "type": "project",
     "description": "PHP calculate-vacation tasks",
+    "license": "MIT",
     "authors": [
         {
             "name": "Alex Karabudka",
