@@ -2,7 +2,7 @@
 services:
   app:
     build: ./docker
-    image: akrbdk/php_calculate-vacation
+    image: okarabudka/php_calculate-vacation
     ports:
       - "8080:80"
     volumes:

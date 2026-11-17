@@ -1,11 +1,11 @@
 {
-    "name": "akrbdk/php-calculate-vacation",
+    "name": "okarabudka/php-calculate-vacation",
     "type": "project",
     "description": "PHP calculate-vacation tasks",
     "authors": [
         {
             "name": "Alex Karabudka",
-            "email": "akarabudka@gmail.com"
+            "email": "sanyakarabudka@gmail.com"
         }
     ],
     "require": {
