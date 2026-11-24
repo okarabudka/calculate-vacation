@@ -7,7 +7,6 @@ namespace Tests\Console;
 use App\Console\CalculateVacationCommand;
 use App\Employee\CsvEmployeeRepository;
 use App\Employee\EmployeeRepository;
-use App\Employee\InvalidEmployeeData;
 use App\Vacation\Rule\ProRataInFirstYear;
 use App\Vacation\Rule\SeniorityBonus;
 use App\Vacation\VacationCalculator;
@@ -36,8 +35,8 @@ final class CalculateVacationCommandTest extends TestCase
 
         $exitCode = $tester->execute(['year' => (string) $year]);
 
-        $this->assertSame(Command::SUCCESS, $exitCode);
-        $this->assertSame($this->lines($year, $days), $tester->getDisplay());
+        self::assertSame(Command::SUCCESS, $exitCode);
+        self::assertSame($this->lines($year, $days), $tester->getDisplay());
     }
 
     /**
@@ -61,8 +60,8 @@ final class CalculateVacationCommandTest extends TestCase
 
         $exitCode = $tester->execute([]);
 
-        $this->assertSame(Command::SUCCESS, $exitCode);
-        $this->assertSame($this->lines(2030, [31, 31, 29, 28, 28]), $tester->getDisplay());
+        self::assertSame(Command::SUCCESS, $exitCode);
+        self::assertSame($this->lines(2030, [31, 31, 29, 28, 28]), $tester->getDisplay());
     }
 
     #[DataProvider('invalidYearProvider')]
@@ -72,8 +71,8 @@ final class CalculateVacationCommandTest extends TestCase
 
         $exitCode = $tester->execute(['year' => $year]);
 
-        $this->assertSame(Command::INVALID, $exitCode);
-        $this->assertStringContainsString('four-digit year', $tester->getDisplay());
+        self::assertSame(Command::INVALID, $exitCode);
+        self::assertStringContainsString('four-digit year', $tester->getDisplay());
     }
 
     /**
@@ -93,8 +92,8 @@ final class CalculateVacationCommandTest extends TestCase
 
         $exitCode = $tester->execute(['year' => '2025']);
 
-        $this->assertSame(Command::FAILURE, $exitCode);
-        $this->assertStringContainsString('Cannot read the employee file "/nonexistent/employees.csv".', $tester->getDisplay());
+        self::assertSame(Command::FAILURE, $exitCode);
+        self::assertStringContainsString('Cannot read the employee file "/nonexistent/employees.csv".', $tester->getDisplay());
     }
 
     public function testFailsWithoutEmployees(): void
@@ -109,8 +108,8 @@ final class CalculateVacationCommandTest extends TestCase
 
         $exitCode = $tester->execute(['year' => '2025']);
 
-        $this->assertSame(Command::FAILURE, $exitCode);
-        $this->assertSame('Employees not found' . PHP_EOL, $tester->getDisplay());
+        self::assertSame(Command::FAILURE, $exitCode);
+        self::assertSame('Employees not found' . PHP_EOL, $tester->getDisplay());
     }
 
     private function tester(?DateTimeImmutable $now = null, ?EmployeeRepository $repository = null): CommandTester

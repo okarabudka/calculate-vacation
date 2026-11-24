@@ -18,7 +18,7 @@ final class SeniorityBonusTest extends TestCase
     {
         $employee = new Employee('Test', new DateTimeImmutable($birthDate), new DateTimeImmutable($contractStart));
 
-        $this->assertSame($expected, (new SeniorityBonus())->apply(26, $employee, new Year($year)));
+        self::assertSame($expected, (new SeniorityBonus())->apply(26, $employee, new Year($year)));
     }
 
     /**

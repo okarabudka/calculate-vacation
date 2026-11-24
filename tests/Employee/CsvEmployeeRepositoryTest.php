@@ -18,7 +18,11 @@ final class CsvEmployeeRepositoryTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->file = tempnam(sys_get_temp_dir(), 'employees-') ?: self::fail('Cannot create a temporary file.');
+        $file = tempnam(sys_get_temp_dir(), 'employees-');
+        if ($file === false) {
+            self::fail('Cannot create a temporary file.');
+        }
+        $this->file = $file;
     }
 
     protected function tearDown(): void
@@ -32,14 +36,14 @@ final class CsvEmployeeRepositoryTest extends TestCase
     {
         $employees = (new CsvEmployeeRepository(__DIR__ . '/../../data/employees-list.csv'))->findAll();
 
-        $this->assertSame(
+        self::assertSame(
             ['Hans Müller', 'Angelika Fringe', 'Peter Klever', 'Marina Helter', 'Sepp Meier'],
             array_map(static fn(Employee $employee): string => $employee->name, $employees),
         );
-        $this->assertSame('1991-07-12', $employees[2]->birthDate->format('Y-m-d'));
-        $this->assertSame('2016-05-15', $employees[2]->contractStart->format('Y-m-d'));
-        $this->assertSame(27, $employees[2]->minimumVacationDays);
-        $this->assertNull($employees[0]->minimumVacationDays);
+        self::assertSame('1991-07-12', $employees[2]->birthDate->format('Y-m-d'));
+        self::assertSame('2016-05-15', $employees[2]->contractStart->format('Y-m-d'));
+        self::assertSame(27, $employees[2]->minimumVacationDays);
+        self::assertNull($employees[0]->minimumVacationDays);
     }
 
     public function testSkipsBlankLinesAndAcceptsAByteOrderMark(): void
@@ -48,15 +52,15 @@ final class CsvEmployeeRepositoryTest extends TestCase
 
         $employees = (new CsvEmployeeRepository($this->file))->findAll();
 
-        $this->assertCount(1, $employees);
-        $this->assertSame('Anna Berg', $employees[0]->name);
+        self::assertCount(1, $employees);
+        self::assertSame('Anna Berg', $employees[0]->name);
     }
 
     public function testReturnsNoEmployeesForAFileWithOnlyTheHeader(): void
     {
         $this->write(self::HEADER);
 
-        $this->assertSame([], (new CsvEmployeeRepository($this->file))->findAll());
+        self::assertSame([], (new CsvEmployeeRepository($this->file))->findAll());
     }
 
     public function testFailsForAMissingFile(): void

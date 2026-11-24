@@ -18,17 +18,17 @@ final class VacationCalculatorTest extends TestCase
 {
     public function testStartsWithTheDefaultMinimum(): void
     {
-        $this->assertSame(26, (new VacationCalculator())->calculate($this->employee('2010-01-01'), new Year(2025)));
+        self::assertSame(26, (new VacationCalculator())->calculate($this->employee('2010-01-01'), new Year(2025)));
     }
 
     public function testStartsWithTheMinimumOfASpecialContract(): void
     {
-        $this->assertSame(32, (new VacationCalculator())->calculate($this->employee('2010-01-01', 32), new Year(2025)));
+        self::assertSame(32, (new VacationCalculator())->calculate($this->employee('2010-01-01', 32), new Year(2025)));
     }
 
     public function testGrantsNothingBeforeTheContractStarts(): void
     {
-        $this->assertSame(0, (new VacationCalculator())->calculate($this->employee('2026-01-01'), new Year(2025)));
+        self::assertSame(0, (new VacationCalculator())->calculate($this->employee('2026-01-01'), new Year(2025)));
     }
 
     public function testAppliesTheRulesInOrder(): void
@@ -46,7 +46,7 @@ final class VacationCalculatorTest extends TestCase
             }
         };
 
-        $this->assertSame(53, (new VacationCalculator($double, $addOne))->calculate($this->employee('2010-01-01'), new Year(2025)));
+        self::assertSame(53, (new VacationCalculator($double, $addOne))->calculate($this->employee('2010-01-01'), new Year(2025)));
     }
 
     #[DataProvider('policyCases')]
@@ -54,7 +54,7 @@ final class VacationCalculatorTest extends TestCase
     {
         $calculator = new VacationCalculator(new SeniorityBonus(), new ProRataInFirstYear());
 
-        $this->assertSame($expected, $calculator->calculate($this->employee($contractStart, $minimum), new Year(2024)));
+        self::assertSame($expected, $calculator->calculate($this->employee($contractStart, $minimum), new Year(2024)));
     }
 
     /**

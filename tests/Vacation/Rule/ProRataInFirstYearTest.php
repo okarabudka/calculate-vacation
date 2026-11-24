@@ -18,7 +18,7 @@ final class ProRataInFirstYearTest extends TestCase
     {
         $employee = new Employee('Test', new DateTimeImmutable('1990-01-01'), new DateTimeImmutable($contractStart));
 
-        $this->assertSame($expected, (new ProRataInFirstYear())->apply($days, $employee, new Year(2025)));
+        self::assertSame($expected, (new ProRataInFirstYear())->apply($days, $employee, new Year(2025)));
     }
 
     /**

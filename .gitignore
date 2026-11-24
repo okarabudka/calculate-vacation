@@ -9,3 +9,4 @@
 .phpunit.cache
 docker-compose.override.yml
 *.log
+.php-cs-fixer.cache
