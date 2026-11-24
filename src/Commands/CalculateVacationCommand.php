@@ -28,7 +28,14 @@ final class CalculateVacationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $year = (int) $input->getArgument('year');
+        $year = $input->getArgument('year');
+
+        if (!preg_match('/^[1-9]\d{3}$/', $year)) {
+            $output->writeln('<error>The year must be a four-digit year, e.g. 2025.</error>');
+            return Command::INVALID;
+        }
+
+        $year = (int) $year;
 
         $repository = new EmployeeRepository(__DIR__ . '/../../data/employees-list.csv');
         $service = new EmployeeService($repository);

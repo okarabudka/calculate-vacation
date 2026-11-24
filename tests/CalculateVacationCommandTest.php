@@ -47,4 +47,27 @@ final class CalculateVacationCommandTest extends TestCase
             'a year in the future' => [2030, array_combine($names, [31, 31, 29, 28, 28])],
         ];
     }
+
+    /**
+     * @dataProvider invalidYearProvider
+     */
+    public function testRejectsAYearThatIsNotAFourDigitNumber(string $year): void
+    {
+        $tester = new CommandTester(new CalculateVacationCommand());
+
+        $exitCode = $tester->execute(['year' => $year]);
+
+        $this->assertSame(Command::INVALID, $exitCode);
+        $this->assertStringContainsString('four-digit year', $tester->getDisplay());
+    }
+
+    public static function invalidYearProvider(): array
+    {
+        return [
+            'text' => ['abc'],
+            'number with text' => ['2025abc'],
+            'zero' => ['0'],
+            'negative' => ['-2025'],
+        ];
+    }
 }
