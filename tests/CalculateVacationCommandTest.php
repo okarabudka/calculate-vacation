@@ -44,6 +44,7 @@ final class CalculateVacationCommandTest extends TestCase
             'contract starts on 15 January' => [2018, array_combine($names, [29, 29, 27, 26, 26])],
             'special contract gets a bonus day' => [2021, array_combine($names, [30, 30, 28, 26, 26])],
             'everybody has a bonus' => [2025, array_combine($names, [30, 30, 28, 27, 27])],
+            'a year in the future' => [2030, array_combine($names, [31, 31, 29, 28, 28])],
         ];
     }
 }

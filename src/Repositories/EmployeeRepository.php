@@ -38,7 +38,7 @@ final class EmployeeRepository
                 $name,
                 new DateTime($birthDate),
                 new DateTime($contractStart),
-                new DateTime(),
+                null,
                 $specialDays !== '' ? (int)$specialDays : null
             );
         }
