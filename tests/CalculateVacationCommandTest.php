@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use App\Commands\CalculateVacationCommand;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -14,9 +15,7 @@ use Symfony\Component\Console\Tester\CommandTester;
  */
 final class CalculateVacationCommandTest extends TestCase
 {
-    /**
-     * @dataProvider sampleOutputProvider
-     */
+    #[DataProvider('sampleOutputProvider')]
     public function testPrintsVacationDaysForTheSampleEmployees(int $year, array $days): void
     {
         $tester = new CommandTester(new CalculateVacationCommand());
@@ -48,9 +47,7 @@ final class CalculateVacationCommandTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider invalidYearProvider
-     */
+    #[DataProvider('invalidYearProvider')]
     public function testRejectsAYearThatIsNotAFourDigitNumber(string $year): void
     {
         $tester = new CommandTester(new CalculateVacationCommand());

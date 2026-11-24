@@ -7,13 +7,12 @@ namespace Tests;
 use App\Models\Employee;
 use App\Services\EmployeeService;
 use DateTime;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class EmployeeTest extends TestCase
 {
-    /**
-     * @dataProvider vacationDataProvider
-     */
+    #[DataProvider('vacationDataProvider')]
     public function testVacationCalculation(
         string $name,
         string $birthDate,
