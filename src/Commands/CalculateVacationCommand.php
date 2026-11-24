@@ -10,7 +10,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Repositories\EmployeeRepository;
-use App\Services\EmployeeService;
+use App\Vacation\Rule\ProRataInFirstYear;
+use App\Vacation\Rule\SeniorityBonus;
+use App\Vacation\VacationCalculator;
+use App\Vacation\Year;
+use InvalidArgumentException;
 
 #[AsCommand(
     name: 'calculate:vacation',
@@ -28,18 +32,16 @@ final class CalculateVacationCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $year = $input->getArgument('year');
-
-        if (!preg_match('/^[1-9]\d{3}$/', $year)) {
-            $output->writeln('<error>The year must be a four-digit year, e.g. 2025.</error>');
+        try {
+            $year = Year::fromString($input->getArgument('year'));
+        } catch (InvalidArgumentException $e) {
+            $output->writeln('<error>' . $e->getMessage() . '</error>');
             return Command::INVALID;
         }
 
-        $year = (int) $year;
-
         $repository = new EmployeeRepository(__DIR__ . '/../../data/employees-list.csv');
-        $service = new EmployeeService($repository);
-        $employees = $service->getEmployees($year);
+        $calculator = new VacationCalculator(new SeniorityBonus(), new ProRataInFirstYear());
+        $employees = $repository->findAll();
 
         if (empty($employees)) {
             $output->writeln('Employees not found');
@@ -47,7 +49,12 @@ final class CalculateVacationCommand extends Command
         }
 
         foreach ($employees as $employee) {
-            $output->writeln($employee['name'] . ": " . $employee['days'] . " vacation days in $year");
+            $output->writeln(sprintf(
+                '%s: %d vacation days in %d',
+                $employee->name,
+                $calculator->calculate($employee, $year),
+                $year->value,
+            ));
         }
 
         return Command::SUCCESS;
