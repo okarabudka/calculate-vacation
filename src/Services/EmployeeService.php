@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Models\Employee;
+use App\Employee\Employee;
 use App\Repositories\EmployeeRepository;
+use DateTimeImmutable;
 
 final class EmployeeService
 {
@@ -21,7 +22,7 @@ final class EmployeeService
         /** @var Employee $employee */
         foreach ($this->employeeRepository->findAll() as $employee) {
             $results[] = [
-                'name' => $employee->getName(),
+                'name' => $employee->name,
                 'days' => $this->calculateVacation($employee, $year),
             ];
         }
@@ -31,34 +32,26 @@ final class EmployeeService
 
     public static function calculateVacation(Employee $employee, int $year): int
     {
-        $baseDays = $employee->getSpecialVacationDays() ?? 26;
-
-        $start = $employee->getEmploymentStartForYear($year);
-        $end = $employee->getEmploymentEndForYear($year);
-
-        if (!$start || !$end) {
+        if ((int) $employee->contractStart->format('Y') > $year) {
             return 0;
         }
 
-        $age = $employee->getAgeOnYear($year);
+        $baseDays = $employee->minimumVacationDays ?? 26;
+        $endOfYear = new DateTimeImmutable("$year-12-31");
 
-        if ($age >= 30) {
-            $employmentYears = $end->diff($employee->getContractStart())->y;
-            $extraDays = intdiv($employmentYears, 5);
-            $baseDays += $extraDays;
+        if ($employee->ageOn($endOfYear) >= 30) {
+            $baseDays += intdiv($employee->yearsEmployedOn($endOfYear), 5);
         }
 
-        $month = (int)$start->format('n');
-        $day = (int)$start->format('j');
-        // Only full months count: a contract starting after the 1st begins with the next month.
-        $startMonth = $day === 1 ? $month : $month + 1;
-        $monthsWorked = max(0, 12 - $startMonth + 1);
-
-        if ($employee->getContractEnd()) {
-            $endMonth = (int)$end->format('n');
-            $monthsWorked = max(0, $endMonth - $startMonth + 1);
+        $startMonth = 1;
+        if ((int) $employee->contractStart->format('Y') === $year) {
+            $month = (int) $employee->contractStart->format('n');
+            $day = (int) $employee->contractStart->format('j');
+            // Only full months count: a contract starting after the 1st begins with the next month.
+            $startMonth = $day === 1 ? $month : $month + 1;
         }
+        $monthsWorked = 12 - $startMonth + 1;
 
-        return (int)floor(($baseDays / 12) * $monthsWorked);
+        return (int) floor(($baseDays / 12) * $monthsWorked);
     }
 }

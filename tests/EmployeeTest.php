@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests;
 
-use App\Models\Employee;
+use App\Employee\Employee;
 use App\Services\EmployeeService;
-use DateTime;
+use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
@@ -17,15 +17,13 @@ final class EmployeeTest extends TestCase
         string $name,
         string $birthDate,
         string $contractStart,
-        ?string $contractEnd,
         ?int $specialDays,
         int $expected
     ): void {
         $employee = new Employee(
             $name,
-            new DateTime($birthDate),
-            new DateTime($contractStart),
-            $contractEnd ? new DateTime($contractEnd) : null,
+            new DateTimeImmutable($birthDate),
+            new DateTimeImmutable($contractStart),
             $specialDays
         );
 
@@ -36,21 +34,21 @@ final class EmployeeTest extends TestCase
     public static function vacationDataProvider(): array
     {
         return [
-            // name, birthDate, contractStart, contractEnd, specialDays, expected
+            // name, birthDate, contractStart, specialDays, expected
             'minimum with bonus' => [
-                'Test Employee', '1990-01-01', '2010-01-01', null, null, 28
+                'Test Employee', '1990-01-01', '2010-01-01', null, 28
             ],
             'special contract full year' => [
-                'Special Contract', '1990-01-01', '2020-01-01', null, 32, 32
+                'Special Contract', '1990-01-01', '2020-01-01', 32, 32
             ],
             'partial from 15th March counts April to December' => [
-                'Partial', '1990-01-01', '2024-03-15', null, null, 19
+                'Partial', '1990-01-01', '2024-03-15', null, 19
             ],
-            'ended before year' => [
-                'Left Employee', '1980-01-01', '2010-01-01', '2023-12-31', null, 0
+            'starts after the year' => [
+                'Future Employee', '1980-01-01', '2025-01-01', null, 0
             ],
             'older with 14 years' => [
-                'Older', '1980-01-01', '2010-01-01', null, null, 28
+                'Older', '1980-01-01', '2010-01-01', null, 28
             ],
         ];
     }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repositories;
 
-use App\Models\Employee;
-use DateTime;
+use App\Employee\Employee;
+use DateTimeImmutable;
 use Exception;
 
 final class EmployeeRepository
@@ -36,9 +36,8 @@ final class EmployeeRepository
 
             $employees[] = new Employee(
                 $name,
-                new DateTime($birthDate),
-                new DateTime($contractStart),
-                null,
+                new DateTimeImmutable($birthDate),
+                new DateTimeImmutable($contractStart),
                 $specialDays !== '' ? (int)$specialDays : null
             );
         }
