@@ -38,10 +38,10 @@ final class CalculateVacationCommandTest extends TestCase
 
         return [
             'before any contract' => [2000, array_combine($names, [0, 0, 0, 0, 0])],
-            'first contracts start' => [2001, array_combine($names, [26, 26, 0, 0, 0])],
-            'special contract starts in May' => [2016, array_combine($names, [29, 29, 18, 0, 0])],
+            'contract starting on 15 January skips January' => [2001, array_combine($names, [26, 23, 0, 0, 0])],
+            'special contract starting on 15 May counts June to December' => [2016, array_combine($names, [29, 29, 15, 0, 0])],
             'contract starts in December' => [2017, array_combine($names, [29, 29, 27, 0, 2])],
-            'contract starts on 15 January' => [2018, array_combine($names, [29, 29, 27, 26, 26])],
+            'contract starts on 15 January' => [2018, array_combine($names, [29, 29, 27, 23, 26])],
             'special contract gets a bonus day' => [2021, array_combine($names, [30, 30, 28, 26, 26])],
             'everybody has a bonus' => [2025, array_combine($names, [30, 30, 28, 27, 27])],
             'a year in the future' => [2030, array_combine($names, [31, 31, 29, 28, 28])],

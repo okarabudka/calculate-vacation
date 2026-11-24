@@ -44,8 +44,8 @@ final class EmployeeTest extends TestCase
             'special contract full year' => [
                 'Special Contract', '1990-01-01', '2020-01-01', null, 32, 32
             ],
-            'partial from 15th March' => [
-                'Partial', '1990-01-01', '2024-03-15', null, null, (int) (26 / 12 * 10)
+            'partial from 15th March counts April to December' => [
+                'Partial', '1990-01-01', '2024-03-15', null, null, 19
             ],
             'ended before year' => [
                 'Left Employee', '1980-01-01', '2010-01-01', '2023-12-31', null, 0

@@ -50,7 +50,8 @@ final class EmployeeService
 
         $month = (int)$start->format('n');
         $day = (int)$start->format('j');
-        $startMonth = ($day <= 1) ? $month : (($day <= 15) ? $month : $month + 1);
+        // Only full months count: a contract starting after the 1st begins with the next month.
+        $startMonth = $day === 1 ? $month : $month + 1;
         $monthsWorked = max(0, 12 - $startMonth + 1);
 
         if ($employee->getContractEnd()) {
