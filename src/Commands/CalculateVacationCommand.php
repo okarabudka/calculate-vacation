@@ -9,7 +9,8 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
-use App\Repositories\EmployeeRepository;
+use App\Employee\CsvEmployeeRepository;
+use App\Employee\InvalidEmployeeData;
 use App\Vacation\Rule\ProRataInFirstYear;
 use App\Vacation\Rule\SeniorityBonus;
 use App\Vacation\VacationCalculator;
@@ -39,9 +40,15 @@ final class CalculateVacationCommand extends Command
             return Command::INVALID;
         }
 
-        $repository = new EmployeeRepository(__DIR__ . '/../../data/employees-list.csv');
+        $repository = new CsvEmployeeRepository(__DIR__ . '/../../data/employees-list.csv');
         $calculator = new VacationCalculator(new SeniorityBonus(), new ProRataInFirstYear());
-        $employees = $repository->findAll();
+
+        try {
+            $employees = $repository->findAll();
+        } catch (InvalidEmployeeData $e) {
+            $output->writeln('<error>' . $e->getMessage() . '</error>');
+            return Command::FAILURE;
+        }
 
         if (empty($employees)) {
             $output->writeln('Employees not found');
